@@ -4,6 +4,13 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`),
 );
 
+const checkId = (req, res, next, val) => {
+  console.log('id is ' + val);
+  if (val > tours.length)
+    return res.status(404).json({ status: 'failure', message: 'invalid id ' });
+  next();
+};
+
 const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -17,8 +24,6 @@ const getAllTours = (req, res) => {
 const getTourById = (req, res) => {
   const tourId = +req.params.id;
   const targetTour = tours.find((tur) => tur.id === tourId);
-  if (tourId > tours.length || targetTour === undefined)
-    res.status(404).json({ status: 'failure', message: 'invalid id ' });
   res.status(200).json({
     status: 'success',
     data: {
@@ -49,10 +54,6 @@ const creatNewTour = (req, res) => {
 };
 
 const editTour = (req, res) => {
-  const tourId = +req.params.id;
-  if (tourId > tours.length)
-    res.status(404).json({ status: 'failure', message: 'invalid id ' });
-
   // console.log(req.body);
   let upTour = {};
   const updateTours = tours.map((tur) => {
@@ -78,10 +79,6 @@ const editTour = (req, res) => {
 };
 
 const deleteTour = (req, res) => {
-  const tourId = +req.params.id;
-  if (tourId > tours.length)
-    res.status(404).json({ status: 'failure', message: 'invalid id ' });
-
   const newTours = tours.filter((tur) => tur.id !== tourId);
 
   fs.writeFile(
@@ -101,4 +98,5 @@ module.exports = {
   creatNewTour,
   editTour,
   deleteTour,
+  checkId,
 };
