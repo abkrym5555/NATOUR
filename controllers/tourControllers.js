@@ -75,7 +75,7 @@ const editTour = (req, res) => {
     JSON.stringify(updateTours),
     (err) => {
       if (!err)
-        res.status(200).json({
+        return res.status(200).json({
           status: 'success',
           data: {
             tour: upTour,
@@ -88,15 +88,17 @@ const editTour = (req, res) => {
 };
 
 const deleteTour = (req, res) => {
+  const tourId = +req.params.id;
+
   const newTours = tours.filter((tur) => tur.id !== tourId);
 
   fs.writeFile(
     `${__dirname}/../dev-data/data/tours-simple.json`,
     JSON.stringify(newTours),
     (err) => {
-      if (!err) res.status(200).end('deleted successfully');
+      if (!err) return res.status(200).end('deleted successfully');
 
-      res.status(404).end('can not update&write in the file');
+      res.status(404).end('can not delete in the file');
     },
   );
 };
