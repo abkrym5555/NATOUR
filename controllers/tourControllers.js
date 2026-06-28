@@ -11,6 +11,15 @@ const checkId = (req, res, next, val) => {
   next();
 };
 
+const checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price)
+    return res.status(400).json({
+      status: 'fail',
+      message: 'missing name or price',
+    });
+  next();
+};
+
 const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -38,7 +47,7 @@ const creatNewTour = (req, res) => {
   const newTour = { ...req.body, id: newId };
   tours.push(newTour);
   fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
+    `${__dirname}/../dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
     (err) => {
       if (err) res.end('can not write in the file');
@@ -82,7 +91,7 @@ const deleteTour = (req, res) => {
   const newTours = tours.filter((tur) => tur.id !== tourId);
 
   fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
+    `${__dirname}/../dev-data/data/tours-simple.json`,
     JSON.stringify(newTours),
     (err) => {
       if (!err) res.status(200).end('deleted successfully');
@@ -99,4 +108,5 @@ module.exports = {
   editTour,
   deleteTour,
   checkId,
+  checkBody,
 };
