@@ -5,12 +5,12 @@ const {
   editTour,
   getAllTours,
   getTourById,
-  checkId,
-  checkBody,
+  aliasTopTours,
 } = require('../controllers/tourControllers');
 
 const route = express.Router();
 
+route.route('/top-5-cheap').get(aliasTopTours, getAllTours);
 route.route('/').get(getAllTours).post(creatNewTour);
 route.route('/:id').get(getTourById).patch(editTour).delete(deleteTour);
 
