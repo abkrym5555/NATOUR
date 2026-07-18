@@ -10,7 +10,7 @@ const { signUp } = require('../controllers/authContoroller');
 
 const router = express.Router();
 
-router.post('/signUp', signUp);
+router.post('/signup', signUp);
 
 router.route('/').get(getAllUsers).post(addNewUser);
 router.route('/:id').get(getUserById).patch(editUser).delete(deleteUser);

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -31,6 +32,16 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same!',
     },
   },
+});
+
+// doc middleware to encrypt the pass
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = bcrypt.hash(this.password, 12);
+  //to remove this from doc
+  this.passwordConfirm = undefined;
+  next();
 });
 
 const User = mongoose.model('User', userSchema);
