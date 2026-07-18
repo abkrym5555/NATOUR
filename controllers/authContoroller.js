@@ -2,7 +2,12 @@ const User = require('../models/userModel');
 const catchAsyncError = require('../utils/catchAsyncError');
 
 const signUp = catchAsyncError(async (req, res, next) => {
-  const newUser = User.create(req.body);
+  const newUser = User.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+  });
 
   res.status(201).json({
     status: 'success',
