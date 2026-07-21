@@ -1,23 +1,30 @@
 const fs = require('fs');
+const AppError = require('../utils/appError');
+const catchAsyncError = require('../utils/catchAsyncError');
+const User = require('../models/userModel');
 
-const users = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/users.json`),
-);
+const getAllUsers = catchAsyncError(async (req, res, next) => {
+  const users = await User.find();
 
-const getAllUsers = (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    result: users.length,
+    data: {
+      users,
+    },
+  });
+});
+const addNewUser = catchAsyncError(async (req, res, next) => {
   res.status(500).json({ status: 'error', message: 'not implemented yet' });
-};
-const addNewUser = (req, res) => {
+});
+const getUserById = catchAsyncError(async (req, res, next) => {
   res.status(500).json({ status: 'error', message: 'not implemented yet' });
-};
-const getUserById = (req, res) => {
+});
+const editUser = catchAsyncError(async (req, res, next) => {
   res.status(500).json({ status: 'error', message: 'not implemented yet' });
-};
-const editUser = (req, res) => {
+});
+const deleteUser = catchAsyncError(async (req, res, next) => {
   res.status(500).json({ status: 'error', message: 'not implemented yet' });
-};
-const deleteUser = (req, res) => {
-  res.status(500).json({ status: 'error', message: 'not implemented yet' });
-};
+});
 
 module.exports = { getAllUsers, addNewUser, getUserById, editUser, deleteUser };

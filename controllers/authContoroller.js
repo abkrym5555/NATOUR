@@ -34,7 +34,7 @@ const logIn = catchAsyncError(async (req, res, next) => {
   const user = await User.findOne({ email }).select('+password');
   if (!user) return next(new AppError('Incorrect email or password', 401));
 
-  const passIsCorrect = await bcrypt.compare(password, user.password);
+  const passIsCorrect = await user.checkPassword(password, user.password);
   if (!passIsCorrect)
     return next(new AppError('Incorrect email or password', 401));
 
