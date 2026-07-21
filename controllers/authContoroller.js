@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const AppError = require('../utils/appError');
@@ -50,4 +51,29 @@ const logIn = catchAsyncError(async (req, res, next) => {
   });
 });
 
-module.exports = { signUp, logIn };
+const accessibleUser = catchAsyncError(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  )
+    token = req.headers.authorization.split(' ')[1];
+
+  if (!token) return next(new AppError('You are not logged in!', 401));
+
+  const validToken = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  const currentUser = await User.findById(validToken.data);
+  if (!currentUser)
+    return next(new AppError('this user is no longer exist', 401));
+
+  if (currentUser.changedPasswordAfter(validToken.iat))
+    return next(
+      new AppError('User recently changed password! Please log in again.', 401),
+    );
+
+  req.user = currentUser;
+
+  next();
+});
+module.exports = { signUp, logIn, accessibleUser };

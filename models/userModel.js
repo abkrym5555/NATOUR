@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same!',
     },
   },
+  passwordChangedAt: Date,
 });
 
 // doc middleware to encrypt the pass
@@ -47,6 +48,15 @@ userSchema.pre('save', async function (next) {
 // instance models
 userSchema.methods.checkPassword = async function (comingPass, pass) {
   return await bcrypt.compare(comingPass, pass);
+};
+
+userSchema.methods.changedPasswordAfter = async function (iat) {
+  if (this.passwordChangedAt) {
+    const secondPassChang = parseInt(this.passwordChangedAt.getTime() / 1000);
+    return iat < secondPassChang;
+  }
+
+  return false;
 };
 
 const User = mongoose.model('User', userSchema);
