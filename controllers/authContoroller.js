@@ -157,8 +157,30 @@ const resetPassword = catchAsyncError(async (req, res, next) => {
     token,
   });
 });
+
+const updatePassword = catchAsyncError(async (req, res, next) => {
+  const user = await User.findOne({ _id: req.user._id }).select('+password');
+
+  if (!user.checkPassword(req.body.passwordCurrent, user.password))
+    return next(new AppError('Your current password is wrong.'));
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+
+  user.save();
+
+  const token = makeToken(user._id);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'password updated successfully',
+    token,
+  });
+});
+
 module.exports = {
   signUp,
+  updatePassword,
   logIn,
   accessibleUser,
   restrictTo,
