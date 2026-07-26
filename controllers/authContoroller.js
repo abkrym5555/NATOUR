@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -127,7 +128,35 @@ const forgetPassword = catchAsyncError(async (req, res, next) => {
     );
   }
 });
-const resetPassword = catchAsyncError(async (req, res, next) => {});
+const resetPassword = catchAsyncError(async (req, res, next) => {
+  const hashToken = crypto
+    .createHash('sha256')
+    .update(req.params)
+    .digest('hex');
+
+  const user = await User.findOne({
+    passwordResetToken: hashToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+
+  if (!user) return next(new AppError('invalid token '), 400);
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+
+  await user.save();
+
+  const token = makeToken(user._id);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'password reset successfully',
+    token,
+  });
+});
 module.exports = {
   signUp,
   logIn,

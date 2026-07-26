@@ -53,6 +53,12 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password')) return next();
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
 // instance models
 userSchema.methods.checkPassword = async function (comingPass, pass) {
   return await bcrypt.compare(comingPass, pass);
