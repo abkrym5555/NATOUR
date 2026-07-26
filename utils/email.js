@@ -6,7 +6,7 @@ const sendEmail = async (options) => {
     secure: false, // use STARTTLS (upgrade connection to TLS after connecting)
     auth: {
       user: process.env.Email_Username,
-      pass: process.env.Email_Username,
+      pass: process.env.Email_Password,
     },
   });
 
