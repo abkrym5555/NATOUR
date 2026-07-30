@@ -14,6 +14,18 @@ const makeToken = (id) => {
   });
 };
 
+const createSendToken = (user, statusCode, res) => {
+  const token = makeToken(user._id);
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 const signUp = catchAsyncError(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
@@ -23,15 +35,7 @@ const signUp = catchAsyncError(async (req, res, next) => {
     role: req.body.role,
   });
 
-  const token = makeToken(newUser._id);
-
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      user: newUser,
-    },
-  });
+  createSendToken(newUser, 201, res);
 });
 
 const logIn = catchAsyncError(async (req, res, next) => {
@@ -47,12 +51,7 @@ const logIn = catchAsyncError(async (req, res, next) => {
   if (!passIsCorrect)
     return next(new AppError('Incorrect email or password', 401));
 
-  const token = makeToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(user, 200, res);
 });
 
 const accessibleUser = catchAsyncError(async (req, res, next) => {
@@ -83,7 +82,6 @@ const accessibleUser = catchAsyncError(async (req, res, next) => {
 
 const restrictTo = (...roles) => {
   return (req, res, next) => {
-    console.log(roles.includes(req.user.role));
     if (!roles.includes(req.user.role))
       return next(
         new AppError('You do not have permission to perform this action', 403),
@@ -169,13 +167,7 @@ const updatePassword = catchAsyncError(async (req, res, next) => {
 
   await user.save();
 
-  const token = makeToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    message: 'password updated successfully',
-    token,
-  });
+  createSendToken(user, 200, res);
 });
 
 module.exports = {
