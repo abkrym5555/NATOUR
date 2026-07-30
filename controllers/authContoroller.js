@@ -167,7 +167,7 @@ const updatePassword = catchAsyncError(async (req, res, next) => {
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
 
-  user.save();
+  await user.save();
 
   const token = makeToken(user._id);
 
