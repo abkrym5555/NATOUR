@@ -64,6 +64,14 @@ userSchema.pre('save', function (next) {
   next();
 });
 
+//query middleware
+userSchema.pre(/^find/, function (next) {
+  this.find({
+    active: { $ne: false },
+  });
+  next();
+});
+
 // instance models
 userSchema.methods.checkPassword = async function (comingPass, pass) {
   return await bcrypt.compare(comingPass, pass);

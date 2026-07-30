@@ -41,6 +41,15 @@ const updateMe = catchAsyncError(async (req, res, next) => {
   });
 });
 
+const deleteMe = catchAsyncError(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+
+  res.status(202).json({
+    status: 'success',
+    data: null,
+  });
+});
+
 const addNewUser = catchAsyncError(async (req, res, next) => {
   res.status(500).json({ status: 'error', message: 'not implemented yet' });
 });
@@ -61,4 +70,5 @@ module.exports = {
   editUser,
   deleteUser,
   updateMe,
+  deleteMe,
 };
