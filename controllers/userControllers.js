@@ -26,7 +26,6 @@ const updateMe = catchAsyncError(async (req, res, next) => {
     );
 
   const filterBody = filterObj(req.body, 'name', 'email');
-  console.log(filterBody);
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filterBody, {
     new: true,
