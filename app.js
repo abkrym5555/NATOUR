@@ -1,13 +1,22 @@
 const express = require('express');
 const morgan = require('morgan');
+const expRateLimit = require('express-rate-limit');
 const app = express();
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const toursRouter = require('./routes/tourRoutes');
 const usersRouter = require('./routes/userRoutes');
 
+const limiter = expRateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour!',
+});
+app.use('/api', limiter);
+
 // middleware to make req body readable
 app.use(express.json());
+
 app.use(morgan('dev'));
 app.use(express.static(`${__dirname}/public`));
 
