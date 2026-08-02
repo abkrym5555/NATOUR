@@ -21,14 +21,14 @@ const tourSchema = new mongoose.Schema(
     maxGroupSize: {
       type: Number,
       required: [true, 'A tour must have a group size'],
-      enum: {
-        values: ['easy', 'medium', 'difficult'],
-        message: 'Difficulty is either: easy, medium, difficult',
-      },
     },
     difficulty: {
       type: String,
       required: [true, 'A tour must have a difficulty'],
+      enum: {
+        values: ['easy', 'medium', 'difficult'],
+        message: 'Difficulty is either: easy, medium, difficult',
+      },
     },
     price: {
       type: Number,
@@ -101,6 +101,7 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
@@ -119,6 +120,14 @@ tourSchema.pre('save', function (next) {
 tourSchema.pre(/^find/, function (next) {
   this.find({
     secretTour: { $ne: true },
+  });
+  next();
+});
+
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
   });
   next();
 });
