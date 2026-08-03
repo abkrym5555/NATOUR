@@ -29,6 +29,14 @@ const reviewSchema = new mongoose.Schema(
   { toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
 
+// query middleware
+reviewSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'tour',
+  }).populate({ path: 'user' });
+  next();
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
