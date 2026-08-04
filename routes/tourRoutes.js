@@ -13,17 +13,25 @@ const {
   accessibleUser,
   restrictTo,
 } = require('../controllers/authContoroller');
+const {
+  createReview,
+  getAllReviews,
+} = require('../controllers/reviewContoroller');
 
-const route = express.Router();
+const router = express.Router();
 
-route.route('/tours-stats').get(getTourStats);
-route.route('/monthly-plan/:year').get(getMonthlyPlan);
-route.route('/top-5-cheap').get(aliasTopTours, getAllTours);
-route.route('/').get(accessibleUser, getAllTours).post(creatNewTour);
-route
+router.route('/tours-stats').get(getTourStats);
+router.route('/monthly-plan/:year').get(getMonthlyPlan);
+router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
+router.route('/').get(accessibleUser, getAllTours).post(creatNewTour);
+router
   .route('/:id')
   .get(getTourById)
   .patch(editTour)
   .delete(accessibleUser, restrictTo('admin', 'lead-guide'), deleteTour);
 
-module.exports = route;
+router
+  .route('/:tourId/reviews')
+  .post(accessibleUser, restrictTo('user'), createReview);
+
+module.exports = router;

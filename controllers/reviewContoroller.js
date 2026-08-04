@@ -5,7 +5,7 @@ const createReview = catchAsyncError(async (req, res, next) => {
   const review = await Review.create({
     review: req.body.review,
     rating: req.body.rating,
-    tour: req.body.tourId,
+    tour: req.params.tourId || req.body.tourId,
     user: req.user.id,
   });
 
