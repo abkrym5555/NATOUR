@@ -13,12 +13,17 @@ const {
   accessibleUser,
   restrictTo,
 } = require('../controllers/authContoroller');
-const {
-  createReview,
-  getAllReviews,
-} = require('../controllers/reviewContoroller');
+// const {
+//   createReview,
+//   getAllReviews,
+// } = require('../controllers/reviewContoroller');
+
+const reviewRouter = require('../routes/reviewRoutes');
 
 const router = express.Router();
+
+// nested route
+router.use('/:tourId/reviews', reviewRouter);
 
 router.route('/tours-stats').get(getTourStats);
 router.route('/monthly-plan/:year').get(getMonthlyPlan);
@@ -30,8 +35,8 @@ router
   .patch(editTour)
   .delete(accessibleUser, restrictTo('admin', 'lead-guide'), deleteTour);
 
-router
-  .route('/:tourId/reviews')
-  .post(accessibleUser, restrictTo('user'), createReview);
+// router
+//   .route('/:tourId/reviews')
+//   .post(accessibleUser, restrictTo('user'), createReview);
 
 module.exports = router;

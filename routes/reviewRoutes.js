@@ -8,7 +8,7 @@ const {
   restrictTo,
 } = require('../controllers/authContoroller');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
