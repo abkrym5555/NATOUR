@@ -30,7 +30,7 @@ const getAllTours = catchAsyncError(async (req, res, next) => {
   });
 });
 
-const getTourById = getOne(Tour, 'reviews');
+const getTourById = getOne(Tour, { path: 'reviews' });
 
 const creatNewTour = createOne(Tour);
 
