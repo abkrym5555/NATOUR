@@ -1,4 +1,4 @@
-const { deleteOne, editOne, createOne } = require('./handlerFactory');
+const { deleteOne, editOne, createOne, getOne } = require('./handlerFactory');
 const catchAsyncError = require('../utils/catchAsyncError');
 const Review = require('../models/reviewModel');
 
@@ -26,6 +26,8 @@ const getAllReviews = catchAsyncError(async (req, res, next) => {
   });
 });
 
+const getReview = getOne(Review);
+
 const deleteReview = deleteOne(Review);
 
 const editReview = editOne(Review);
@@ -36,4 +38,5 @@ module.exports = {
   deleteReview,
   editReview,
   setIds,
+  getReview,
 };

@@ -5,6 +5,7 @@ const {
   deleteReview,
   editReview,
   setIds,
+  getReview,
 } = require('../controllers/reviewContoroller');
 const {
   accessibleUser,
@@ -18,6 +19,6 @@ router
   .get(getAllReviews)
   .post(accessibleUser, restrictTo('user'), setIds, createReview);
 
-router.route('/:id').delete(deleteReview).patch(editReview);
+router.route('/:id').delete(deleteReview).patch(editReview).get(getReview);
 
 module.exports = router;

@@ -41,4 +41,24 @@ const createOne = (model) =>
     });
   });
 
-module.exports = { deleteOne, editOne, createOne };
+const getOne = (model, populateOptions) => {
+  catchAsyncError(async (req, res, next) => {
+    let query = model.findById(req.params.id).populate('reviews');
+
+    if (populateOptions) query.populate(populateOptions);
+
+    const targetDoc = await query;
+
+    if (!targetTour) {
+      return new AppError('No document found with this id ', 404);
+    }
+    res.status(200).json({
+      status: 'success',
+      data: {
+        data: targetDoc,
+      },
+    });
+  });
+};
+
+module.exports = { deleteOne, editOne, createOne, getOne };
