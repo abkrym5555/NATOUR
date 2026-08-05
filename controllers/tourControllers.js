@@ -3,6 +3,7 @@ const APIFeatures = require('../utils/aptFeatures');
 const catchAsyncError = require('../utils/catchAsyncError');
 const AppError = require('../utils/appError');
 const { path } = require('../app');
+const { deleteOne } = require('./handlerFactory');
 
 const aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -69,16 +70,7 @@ const editTour = catchAsyncError(async (req, res, next) => {
   });
 });
 
-const deleteTour = catchAsyncError(async (req, res, next) => {
-  const delTour = await Tour.findOneAndDelete({ _id: req.params.id });
-  if (!delTour) {
-    return new AppError('No tour found with this id ', 404);
-  }
-  res.status(200).json({
-    status: 'success',
-    deletedTour: delTour,
-  });
-});
+const deleteTour = deleteOne(Tour);
 
 const getTourStats = catchAsyncError(async (req, res, next) => {
   const stats = await Tour.aggregate([

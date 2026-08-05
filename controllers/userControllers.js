@@ -3,6 +3,7 @@ const AppError = require('../utils/appError');
 const catchAsyncError = require('../utils/catchAsyncError');
 const User = require('../models/userModel');
 const filterObj = require('../utils/filterObj');
+const { deleteOne } = require('./handlerFactory');
 
 const getAllUsers = catchAsyncError(async (req, res, next) => {
   const users = await User.find();
@@ -58,9 +59,7 @@ const getUserById = catchAsyncError(async (req, res, next) => {
 const editUser = catchAsyncError(async (req, res, next) => {
   res.status(500).json({ status: 'error', message: 'not implemented yet' });
 });
-const deleteUser = catchAsyncError(async (req, res, next) => {
-  res.status(500).json({ status: 'error', message: 'not implemented yet' });
-});
+const deleteUser = deleteOne(User);
 
 module.exports = {
   getAllUsers,
