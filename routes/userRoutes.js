@@ -7,6 +7,7 @@ const {
   getUserById,
   updateMe,
   deleteMe,
+  getMe,
 } = require('../controllers/userControllers');
 const {
   signUp,
@@ -28,6 +29,7 @@ router.patch('/resetPassword/:token', resetPassword);
 router.patch('/updateMyPassword', accessibleUser, updatePassword);
 router.patch('/updateMe', accessibleUser, updateMe);
 router.delete('/deleteMe', accessibleUser, deleteMe);
+router.delete('/me', accessibleUser, getMe, getUserById);
 
 router.route('/').get(getAllUsers).post(addNewUser);
 router.route('/:id').get(getUserById).patch(editUser).delete(deleteUser);

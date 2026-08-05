@@ -44,6 +44,12 @@ const addNewUser = catchAsyncError(async (req, res, next) => {
   res.status(500).json({ status: 'error', message: 'not implemented yet' });
 });
 
+// middleware for getuserbyid
+const getMe = catchAsyncError(async (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+});
+
 const getUserById = getOne(User);
 
 const editUser = editOne(User);
@@ -58,4 +64,5 @@ module.exports = {
   deleteUser,
   updateMe,
   deleteMe,
+  getMe,
 };
