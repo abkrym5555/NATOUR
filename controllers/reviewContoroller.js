@@ -1,22 +1,15 @@
+const { deleteOne, editOne, createOne } = require('./handlerFactory');
 const catchAsyncError = require('../utils/catchAsyncError');
 const Review = require('../models/reviewModel');
-const { deleteOne } = require('./handlerFactory');
 
-const createReview = catchAsyncError(async (req, res, next) => {
-  const review = await Review.create({
-    review: req.body.review,
-    rating: req.body.rating,
-    tour: req.params.tourId || req.body.tourId,
-    user: req.user.id,
-  });
+//middleware for create review
+const setIds = (req, res, next) => {
+  if (!req.body.user) req.body.user = req.user.id;
+  if (!req.body.tour) req.body.tourId = req.params.tourId;
+  next();
+};
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      review,
-    },
-  });
-});
+const createReview = createOne(Review);
 
 const getAllReviews = catchAsyncError(async (req, res, next) => {
   let filter = {};
@@ -35,4 +28,12 @@ const getAllReviews = catchAsyncError(async (req, res, next) => {
 
 const deleteReview = deleteOne(Review);
 
-module.exports = { createReview, getAllReviews, deleteReview };
+const editReview = editOne(Review);
+
+module.exports = {
+  createReview,
+  getAllReviews,
+  deleteReview,
+  editReview,
+  setIds,
+};

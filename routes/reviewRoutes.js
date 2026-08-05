@@ -3,6 +3,8 @@ const {
   createReview,
   getAllReviews,
   deleteReview,
+  editReview,
+  setIds,
 } = require('../controllers/reviewContoroller');
 const {
   accessibleUser,
@@ -14,8 +16,8 @@ const router = express.Router({ mergeParams: true });
 router
   .route('/')
   .get(getAllReviews)
-  .post(accessibleUser, restrictTo('user'), createReview);
+  .post(accessibleUser, restrictTo('user'), setIds, createReview);
 
-router.route('/:id').delete(deleteReview);
+router.route('/:id').delete(deleteReview).patch(editReview);
 
 module.exports = router;

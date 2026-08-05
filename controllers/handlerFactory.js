@@ -13,4 +13,32 @@ const deleteOne = (model) =>
     });
   });
 
-module.exports = { deleteOne };
+const editOne = (model) =>
+  catchAsyncError(async (req, res, next) => {
+    const editDoc = await model.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!editDoc) {
+      return new AppError('No document found with this id ', 404);
+    }
+    return res.status(200).json({
+      status: 'success',
+      data: {
+        editedDoc: editDoc,
+      },
+    });
+  });
+
+const createOne = (model) =>
+  catchAsyncError(async (req, res, next) => {
+    const newDoc = await model.create(req.body);
+    res.status(201).json({
+      status: 'success',
+      data: {
+        newDoc,
+      },
+    });
+  });
+
+module.exports = { deleteOne, editOne, createOne };
