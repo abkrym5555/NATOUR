@@ -3,19 +3,9 @@ const AppError = require('../utils/appError');
 const catchAsyncError = require('../utils/catchAsyncError');
 const User = require('../models/userModel');
 const filterObj = require('../utils/filterObj');
-const { deleteOne, editOne, getOne } = require('./handlerFactory');
+const { deleteOne, editOne, getOne, getAll } = require('./handlerFactory');
 
-const getAllUsers = catchAsyncError(async (req, res, next) => {
-  const users = await User.find();
-
-  res.status(200).json({
-    status: 'success',
-    result: users.length,
-    data: {
-      users,
-    },
-  });
-});
+const getAllUsers = getAll(User);
 
 const updateMe = catchAsyncError(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm)

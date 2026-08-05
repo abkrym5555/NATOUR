@@ -1,4 +1,10 @@
-const { deleteOne, editOne, createOne, getOne } = require('./handlerFactory');
+const {
+  deleteOne,
+  editOne,
+  createOne,
+  getOne,
+  getAll,
+} = require('./handlerFactory');
 const catchAsyncError = require('../utils/catchAsyncError');
 const Review = require('../models/reviewModel');
 
@@ -11,20 +17,7 @@ const setIds = (req, res, next) => {
 
 const createReview = createOne(Review);
 
-const getAllReviews = catchAsyncError(async (req, res, next) => {
-  let filter = {};
-  if (req.params.tourId) {
-    filter = { tour: req.params.tourId };
-  }
-  const reviews = await Review.find(filter);
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      reviews,
-    },
-  });
-});
+const getAllReviews = getAll(Review);
 
 const getReview = getOne(Review);
 
