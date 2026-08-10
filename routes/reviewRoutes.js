@@ -14,11 +14,17 @@ const {
 
 const router = express.Router({ mergeParams: true });
 
+router.use(accessibleUser);
+
 router
   .route('/')
   .get(getAllReviews)
-  .post(accessibleUser, restrictTo('user'), setIds, createReview);
+  .post(restrictTo('user'), setIds, createReview);
 
-router.route('/:id').delete(deleteReview).patch(editReview).get(getReview);
+router
+  .route('/:id')
+  .delete(restrictTo('user', 'admin'), deleteReview)
+  .patch(restrictTo('user', 'admin'), editReview)
+  .get(getReview);
 
 module.exports = router;

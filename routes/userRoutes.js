@@ -16,20 +16,24 @@ const {
   resetPassword,
   updatePassword,
   accessibleUser,
+  restrictTo,
 } = require('../controllers/authContoroller');
 
 const router = express.Router();
 
 router.post('/signup', signUp);
 router.post('/login', logIn);
-
 router.post('/forgetPassword', forgetPassword);
 router.patch('/resetPassword/:token', resetPassword);
 
-router.patch('/updateMyPassword', accessibleUser, updatePassword);
-router.patch('/updateMe', accessibleUser, updateMe);
-router.delete('/deleteMe', accessibleUser, deleteMe);
-router.delete('/me', accessibleUser, getMe, getUserById);
+router.use(accessibleUser);
+
+router.patch('/updateMyPassword', updatePassword);
+router.patch('/updateMe', updateMe);
+router.delete('/deleteMe', deleteMe);
+router.delete('/me', getMe, getUserById);
+
+router.use(restrictTo('admin'));
 
 router.route('/').get(getAllUsers).post(addNewUser);
 router.route('/:id').get(getUserById).patch(editUser).delete(deleteUser);
