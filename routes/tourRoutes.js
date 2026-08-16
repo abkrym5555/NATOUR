@@ -9,6 +9,7 @@ const {
   getTourStats,
   getMonthlyPlan,
   getTourWithIn,
+  getDistances,
 } = require('../controllers/tourControllers');
 const {
   accessibleUser,
@@ -39,6 +40,8 @@ router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
 router
   .route('tours-within/:distance/center/:latlng/unit/:unit')
   .get(getTourWithIn);
+
+router.route('/distances/:latlng/unit/:unit').get(getDistances);
 
 router
   .route('/')
