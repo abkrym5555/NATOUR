@@ -8,6 +8,7 @@ const {
   aliasTopTours,
   getTourStats,
   getMonthlyPlan,
+  getTourWithIn,
 } = require('../controllers/tourControllers');
 const {
   accessibleUser,
@@ -34,6 +35,11 @@ router
     getMonthlyPlan,
   );
 router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
+
+router
+  .route('tours-within/:distance/center/:latlng/unit/:unit')
+  .get(getTourWithIn);
+
 router
   .route('/')
   .get(getAllTours)
